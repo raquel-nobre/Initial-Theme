@@ -1,10 +1,25 @@
-import React from 'react';
-import { StatusBar } from 'react-native';
+import React, { useState } from 'react';
+import { StatusBar, Alert } from 'react-native';
 import Tasks from '../../components/Tasks';
+import useTasks from '../../hooks/useTasks';
 import * as Styled from "./styles";
 
 
 export default function Home() {
+  const {addTasks} = useTasks();
+
+  const [task, setTask] = useState('');
+
+  const handleAddTask = () => {
+    try {
+      addTasks('fl23b4', task);
+      Alert.alert('Opa', 'Deu certo');
+    } catch (error) {
+      Alert.alert('Opa', 'Não foi possivel adicionar a tarefa');
+
+    }
+  }
+
   return (
    <Styled.Container>  
      <StatusBar
@@ -19,8 +34,10 @@ export default function Home() {
            returnKeyType='search'
            numberOfLines={1}
            maxLength={24}
+           onChangeText={setTask}
+           
          />
-         <Styled.AddTaskButton>
+         <Styled.AddTaskButton onPress={handleAddTask}>
            <Styled.ButtonTitle>Adicionar</Styled.ButtonTitle>
          </Styled.AddTaskButton>
        </Styled.Header>
@@ -31,8 +48,6 @@ export default function Home() {
        </Styled.BoxInfoTasks> 
 
        <Styled.TasksList>
-         <Tasks/>
-         <Tasks/>
          <Tasks/>
        </Styled.TasksList>
 
