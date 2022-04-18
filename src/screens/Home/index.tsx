@@ -1,24 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StatusBar, Alert } from 'react-native';
 import Tasks from '../../components/Tasks';
 import useTasks from '../../hooks/useTasks';
 import * as Styled from "./styles";
 
+interface ItaskList {
+  id: string; 
+  task: string;
+}
+
 
 export default function Home() {
-  const {addTasks} = useTasks();
+  const {addTasks, getTasks} = useTasks();
 
   const [task, setTask] = useState('');
+  const [myTasks, setMyTasks] = useState<ItaskList[]>([]);
+  console.log(myTasks);
 
-  const handleAddTask = () => {
+  const handleAddTask = async () => {
     try {
-      addTasks('fl23b4', task);
-      Alert.alert('Opa', 'Deu certo');
+      const id = new Date().getTime().toString(); 
+      await addTasks(id, task);
     } catch (error) {
       Alert.alert('Opa', 'Não foi possivel adicionar a tarefa');
 
     }
   }
+
+   const getTaskList = async () => {
+     try {
+       const response = await getTasks();
+
+       setMyTasks(response);
+     } catch (error) {
+      Alert.alert('Opa', 'Não foi possivel adicionar a tarefa');
+
+    }
+   }
+
+   useEffect(() => {
+    getTaskList();
+   }, []);
 
   return (
    <Styled.Container>  
